@@ -1,0 +1,37 @@
+---
+title: "maps"
+author: "Mark Stephens"
+date: "2/18/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidycensus)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+library(janitor)
+library(gt)
+
+census_api_key("9f9584127dd506cdaf80bdb78927e9c01c12f2b8")
+
+```
+
+
+```{r}
+rural <- get_decennial(geography = "state",
+                       variables = c("P001001", "P002005"),
+                       year = 2010,
+                       output = "wide",
+                       geometry = TRUE) %>%
+  rename(state = NAME) %>%
+  mutate(prop_rural = P002005/P001001,
+         state = reorder(state, prop_rural))
+
+glimpse(rural)
+```
+
